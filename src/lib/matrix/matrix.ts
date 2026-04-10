@@ -76,7 +76,7 @@ export function generateMatrix(
     ? []
     : numVariantsPerColumn.length === 1
       ? [{ variantIndices: [0], totalDistance: 0, voiceMovementsPerColumn: [] }]
-      : findOptimalPathsFromImpl(distances, numVariantsPerColumn, 0, 0, 6);
+      : findOptimalPathsImpl(distances, numVariantsPerColumn, 6);
 
   return {
     columns,
