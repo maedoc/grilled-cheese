@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
+    "build:lib": "BUILD_LIB=1 vite build",
     "test": "vitest run",
     "test:watch": "vitest",
     "dev": "vite",
