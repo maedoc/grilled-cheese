@@ -475,8 +475,13 @@ button:active {
     padding: 16px 12px 32px;
   }
 
+  .header h1 {
+    font-size: 20px;
+  }
+
   .input-group input {
     min-width: 100%;
+    font-size: 16px;
   }
 
   .input-panel {
@@ -486,9 +491,194 @@ button:active {
 
   .path-controls {
     margin-left: 0;
+    flex-wrap: wrap;
   }
 
   .input-group select {
     min-width: 100%;
+    font-size: 16px;
+  }
+
+  .matrix-header-cell {
+    font-size: 15px;
+    padding: 8px 10px;
+    min-width: 72px;
+  }
+
+  .matrix-variant-cell {
+    font-size: 12px;
+    padding: 8px 8px;
+    min-width: 72px;
+  }
+
+  .matrix-info-cell {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  .matrix-section-label {
+    font-size: 10px;
+    padding-right: 6px;
+  }
+
+  .path-row-label {
+    font-size: 10px;
+    padding-right: 4px;
+  }
+
+  .path-row-label .path-distance {
+    font-size: 9px;
+  }
+
+  .empty-cell {
+    min-width: 72px;
+  }
+
+  .path-panel {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+
+  .path-panel .path-chords {
+    font-size: 13px;
+    flex-wrap: wrap;
+  }
+
+  .legend {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  #app {
+    padding: 10px 6px 20px;
+  }
+
+  .header h1 {
+    font-size: 17px;
+  }
+
+  .header p {
+    font-size: 12px;
+  }
+
+  .input-panel {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .input-group label {
+    font-size: 10px;
+  }
+
+  .input-group input,
+  .input-group select {
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 10px 16px;
+    width: 100%;
+  }
+
+  .path-controls {
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .matrix-header-cell {
+    font-size: 13px;
+    padding: 6px 4px;
+    min-width: 58px;
+  }
+
+  .matrix-variant-cell {
+    font-size: 11px;
+    padding: 6px 3px;
+    min-width: 58px;
+    border-radius: 4px;
+  }
+
+  .matrix-info-cell {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+
+  .matrix-section-label {
+    font-size: 9px;
+    padding-right: 3px;
+  }
+
+  .empty-cell {
+    min-width: 58px;
+  }
+
+  .path-row-label {
+    font-size: 9px;
+    padding-right: 2px;
+  }
+
+  .path-row-label .path-number {
+    font-size: 9px;
+  }
+
+  .path-row-label .path-distance {
+    font-size: 8px;
+  }
+
+  .sub-badge {
+    font-size: 8px;
+    padding: 0px 3px;
+  }
+
+  .path-panel {
+    padding: 10px;
+    gap: 6px;
+  }
+
+  .path-panel .path-chords {
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .path-panel .path-distance {
+    font-size: 12px;
+  }
+
+  .path-panel .path-movements {
+    gap: 4px;
+  }
+
+  .path-panel .path-movements span {
+    font-size: 11px;
+    padding: 1px 6px;
+  }
+
+  .legend {
+    gap: 8px;
+  }
+
+  .legend-item {
+    font-size: 10px;
+  }
+
+  .legend-swatch {
+    width: 12px;
+    height: 12px;
+  }
+
+  .tooltip {
+    font-size: 11px;
+    max-width: 220px;
+    padding: 8px 10px;
+  }
+
+  .tooltip .tt-symbol {
+    font-size: 14px;
   }
 }

@@ -40,10 +40,15 @@ export class View {
   private onGenerate:
     | ((chords: string, tonic: string, mode: string) => void)
     | null = null;
+  private currentGrid: HTMLElement | null = null;
+  private currentNumCols = 0;
+  private resizeHandler: (() => void) | null = null;
 
   constructor(container: HTMLElement) {
     this.container = container;
     this.buildInitialDOM();
+    this.resizeHandler = () => this.updateGridTemplate();
+    window.addEventListener('resize', this.resizeHandler);
   }
 
   setOnCellClick(handler: (col: number, variantIndex: number) => void): void {
@@ -259,7 +264,9 @@ export class View {
 
     const grid = document.createElement('div');
     grid.className = 'matrix-container';
-    grid.style.gridTemplateColumns = `120px repeat(${numCols}, 1fr)`;
+    this.currentGrid = grid;
+    this.currentNumCols = numCols;
+    this.updateGridTemplate();
 
     const cornerLabel = document.createElement('div');
     cornerLabel.className = 'matrix-header-cell';
@@ -380,6 +387,10 @@ export class View {
         cell.addEventListener('click', () => {
           this.onCellClick?.(col, variantIdx);
         });
+
+        cell.addEventListener('touchstart', (e: TouchEvent) => {
+          this.showTooltipFromTouch(e, matrix.columns[col]!, variant);
+        }, { passive: false });
 
         cell.addEventListener('mouseenter', (e: MouseEvent) => {
           this.showTooltip(e, matrix.columns[col]!, variant);
@@ -675,5 +686,31 @@ export class View {
     if (this.tooltip) {
       this.tooltip.style.display = 'none';
     }
+  }
+
+  private updateGridTemplate(): void {
+    if (!this.currentGrid || !this.currentNumCols) return;
+    const w = window.innerWidth;
+    if (w < 480) {
+      this.currentGrid.style.gridTemplateColumns = `48px repeat(${this.currentNumCols}, 58px)`;
+    } else if (w < 768) {
+      this.currentGrid.style.gridTemplateColumns = `72px repeat(${this.currentNumCols}, 72px)`;
+    } else {
+      this.currentGrid.style.gridTemplateColumns = `120px repeat(${this.currentNumCols}, 1fr)`;
+    }
+  }
+
+  private showTooltipFromTouch(
+    e: TouchEvent,
+    column: MatrixColumn,
+    variant: ChordVariant,
+  ): void {
+    e.preventDefault();
+    const touch = e.touches[0]!;
+    this.showTooltip(
+      { clientX: touch.clientX, clientY: touch.clientY } as MouseEvent,
+      column,
+      variant,
+    );
   }
 }
