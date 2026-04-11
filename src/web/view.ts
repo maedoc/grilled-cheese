@@ -1,4 +1,7 @@
 import { PITCH_CLASS_SHARPS } from '../lib/index.js';
+
+declare const __BUILD_TIME__: string | undefined;
+
 import type {
   VoiceLeadingMatrix,
   VoiceLeadingPath,
@@ -277,7 +280,8 @@ export class View {
   private updateBuildTime(): void {
     const el = document.getElementById('build-time');
     if (!el) return;
-    const iso = (globalThis as unknown as Record<string, string>)['__BUILD_TIME__'];
+    // eslint-disable-next-line no-constant-binary-expression
+    const iso: string | undefined = typeof __BUILD_TIME__ !== 'undefined' ? __BUILD_TIME__ : undefined;
     if (!iso) return;
     const d = new Date(iso);
     el.textContent = `Last build: ${d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })} ${d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
