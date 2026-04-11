@@ -259,11 +259,28 @@ export class View {
     matrixArea.appendChild(pathPanel);
     matrixArea.style.display = 'none';
 
+    const footer = document.createElement('div');
+    footer.className = 'footer';
+    const footerSpan = document.createElement('span');
+    footerSpan.id = 'build-time';
+    footer.appendChild(footerSpan);
+
     this.container.appendChild(header);
     this.container.appendChild(inputPanel);
     this.container.appendChild(matrixArea);
+    this.container.appendChild(footer);
 
+    this.updateBuildTime();
     this.createTooltip();
+  }
+
+  private updateBuildTime(): void {
+    const el = document.getElementById('build-time');
+    if (!el) return;
+    const iso = (globalThis as unknown as Record<string, string>)['__BUILD_TIME__'];
+    if (!iso) return;
+    const d = new Date(iso);
+    el.textContent = `Last build: ${d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })} ${d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}`;
   }
 
   private createTooltip(): void {

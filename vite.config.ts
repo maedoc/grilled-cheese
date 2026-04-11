@@ -4,6 +4,9 @@ import { resolve } from 'path';
 const isLib = process.env.BUILD_LIB === '1';
 
 export default defineConfig({
+  define: {
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
   base: isLib ? '/' : '/grilled-cheese/',
   build: isLib
     ? {

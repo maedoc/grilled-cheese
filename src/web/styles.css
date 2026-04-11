@@ -352,6 +352,15 @@ button:active {
   margin-bottom: 16px;
 }
 
+.footer {
+  margin-top: 32px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
 .tooltip {
   position: fixed;
   background: var(--bg-tertiary);
