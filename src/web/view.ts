@@ -40,6 +40,8 @@ export class View {
   private onGenerate:
     | ((chords: string, tonic: string, mode: string) => void)
     | null = null;
+  private presets: Array<{ name: string; chords: string; key: string; mode: string }> = [];
+  private onPreset: ((chords: string, key: string, mode: string) => void) | null = null;
   private currentGrid: HTMLElement | null = null;
   private currentNumCols = 0;
   private resizeHandler: (() => void) | null = null;
@@ -73,6 +75,21 @@ export class View {
     this.onGenerate = handler;
   }
 
+  setPresets(presets: Array<{ name: string; chords: string; key: string; mode: string }>): void {
+    this.presets = presets;
+    const select = document.getElementById('preset-select') as HTMLSelectElement;
+    for (let i = 0; i < presets.length; i++) {
+      const opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = presets[i]!.name;
+      select.appendChild(opt);
+    }
+  }
+
+  setOnPreset(handler: (chords: string, key: string, mode: string) => void): void {
+    this.onPreset = handler;
+  }
+
   private buildInitialDOM(): void {
     this.container.innerHTML = '';
 
@@ -98,6 +115,10 @@ export class View {
     chordInput.type = 'text';
     chordInput.placeholder = 'Dm7 G7 Cmaj7';
     chordInput.spellcheck = false;
+    chordInput.addEventListener('input', () => {
+      const ps = document.getElementById('preset-select') as HTMLSelectElement;
+      if (ps) ps.value = '';
+    });
     chordGroup.appendChild(chordLabel);
     chordGroup.appendChild(chordInput);
 
@@ -138,6 +159,31 @@ export class View {
     modeSelect.appendChild(minorOpt);
     modeGroup.appendChild(modeLabel);
     modeGroup.appendChild(modeSelect);
+
+    const presetGroup = document.createElement('div');
+    presetGroup.className = 'input-group';
+    const presetLabel = document.createElement('label');
+    presetLabel.textContent = 'Preset';
+    presetLabel.setAttribute('for', 'preset-select');
+    const presetSelect = document.createElement('select');
+    presetSelect.id = 'preset-select';
+    const customOpt = document.createElement('option');
+    customOpt.value = '';
+    customOpt.textContent = 'Custom';
+    presetSelect.appendChild(customOpt);
+    presetSelect.addEventListener('change', () => {
+      if (!presetSelect.value) return;
+      const idx = parseInt(presetSelect.value, 10);
+      const preset = this.presets[idx];
+      if (preset) {
+        (document.getElementById('chord-input') as HTMLInputElement).value = preset.chords;
+        (document.getElementById('key-select') as HTMLSelectElement).value = preset.key;
+        (document.getElementById('mode-select') as HTMLSelectElement).value = preset.mode;
+        this.onPreset?.(preset.chords, preset.key, preset.mode);
+      }
+    });
+    presetGroup.appendChild(presetLabel);
+    presetGroup.appendChild(presetSelect);
 
     const generateBtn = document.createElement('button');
     generateBtn.id = 'generate-btn';
@@ -185,6 +231,7 @@ export class View {
     pathControls.appendChild(greedyBtn);
     pathControls.appendChild(resetBtn);
 
+    inputPanel.appendChild(presetGroup);
     inputPanel.appendChild(chordGroup);
     inputPanel.appendChild(keyGroup);
     inputPanel.appendChild(modeGroup);

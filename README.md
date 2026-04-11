@@ -62,6 +62,11 @@ index.html         # Web app entry point
 - **Path finding**: Viterbi dynamic programming with diversity penalty (+5) for previously used variants
 - **Substitutions**: Pitch-class overlap against chord scale (7-note), minimum 2 shared PCs
 
+## Planned Features
+
+- **Audio playback** — hear the 4-note voicings and entire paths via Web Audio API
+- **MIDI export** — export voice-leading paths as MIDI files
+
 ## Dependencies
 
 - [`@tonaljs/tonal`](https://github.com/tonaljs/tonal) — Pitch/interval math
