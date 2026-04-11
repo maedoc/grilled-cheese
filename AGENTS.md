@@ -4,12 +4,22 @@
 
 ```
 npm test           # run all tests (vitest)
-npm run build      # vite build
+npm run build      # vite build (web app, outputs to dist/)
+npm run build:lib  # BUILD_LIB=1 vite build (library bundle)
 npm run typecheck  # tsc --noEmit
 npm run dev        # dev server
 ```
 
 Always run `npm test` and `npm run typecheck` after making changes.
+
+## Deployment
+
+- GitHub Pages auto-deploys on push to `main` via `.github/workflows/deploy.yml`
+- Site URL: https://maedoc.github.io/grilled-cheese/
+- Remote: `git@github.com:maedoc/grilled-cheese` (main branch)
+- `npm run build` produces the web app; `npm run build:lib` produces the library bundle
+- Vite base path is `/grilled-cheese/` for the web app build (controlled by `BUILD_LIB` env var in `vite.config.ts`)
+- Check deploy status: `gh run list --limit 1` / `gh run watch <run-id>`
 
 ## Code Style
 
@@ -32,4 +42,4 @@ Always run `npm test` and `npm run typecheck` after making changes.
 - Repetition penalty (+20) prevents static paths where the same voicing repeats across columns
 - Original chord is pinned at index 0 in each column; only substitutions are sorted by proximity
 - Variant pool capped at 30 per column to keep path finding tractable
-- All displayed paths anchor from column 0 row 0 (the original first chord)
+- All initial paths use unanchored `findOptimalPaths` so column 0 shows diverse roots (not all the same chord)
