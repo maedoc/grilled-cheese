@@ -109,3 +109,4 @@ export { computeDistance, computeDistanceMatrix } from './voicing/distance.js';
 export { findOptimalPath, findGreedyPath, findOptimalPaths, findOptimalPathFrom, findOptimalPathsFrom } from './voicing/path.js';
 
 export { generateMatrix } from './matrix/matrix.js';
+export type { GenerateMatrixOptions } from './matrix/matrix.js';

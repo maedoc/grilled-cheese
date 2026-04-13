@@ -27,13 +27,19 @@ function sortVariantsByProximity(
   return scored.map(s => variants[s.index]!);
 }
 
+export interface GenerateMatrixOptions {
+  includeRootLeading?: boolean;
+}
+
 export function generateMatrix(
   chordSymbols: string[],
   tonic: string,
   mode: 'major' | 'minor',
+  options: GenerateMatrixOptions = {},
 ): VoiceLeadingMatrix {
   const key = createKey(tonic, mode);
   const parsedChords = chordSymbols.map(s => parseChord(s));
+  const includeRootLeading = options.includeRootLeading ?? false;
 
   const columns: MatrixColumn[] = [];
 
@@ -68,7 +74,7 @@ export function generateMatrix(
 
   const distances: VoiceLeadingDistance[][][] = [];
   for (let i = 0; i < columns.length - 1; i++) {
-    distances.push(computeDistanceMatrix(columns[i]!.variants, columns[i + 1]!.variants));
+    distances.push(computeDistanceMatrix(columns[i]!.variants, columns[i + 1]!.variants, includeRootLeading));
   }
 
   const numVariantsPerColumn = columns.map(c => c.variants.length);

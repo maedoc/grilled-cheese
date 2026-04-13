@@ -3,6 +3,17 @@ import { minSemitoneDistance, permutations } from '../core/constants.js';
 import { extractVoicing } from './voicing.js';
 
 const REPETITION_PENALTY = 20;
+const ROOT_LEADING_WEIGHT = 5;
+
+function getVariantRoot(variant: ChordVariant): PitchClass {
+  return variant.pitchClasses[0]!;
+}
+
+function computeRootLeadingDistance(fromVariant: ChordVariant, toVariant: ChordVariant): number {
+  const fromRoot = getVariantRoot(fromVariant);
+  const toRoot = getVariantRoot(toVariant);
+  return minSemitoneDistance(fromRoot, toRoot);
+}
 
 function computeRepetitionPenalty(fromVariant: ChordVariant, toVariant: ChordVariant): number {
   const fromVoicing = extractVoicing(fromVariant);
@@ -58,6 +69,7 @@ export function computeDistance(
 export function computeDistanceMatrix(
   fromVariants: ChordVariant[],
   toVariants: ChordVariant[],
+  includeRootLeading = false,
 ): VoiceLeadingDistance[][] {
   const result: VoiceLeadingDistance[][] = [];
   for (let i = 0; i < fromVariants.length; i++) {
@@ -68,7 +80,11 @@ export function computeDistanceMatrix(
       const d = computeDistance(fromVoicing, toVoicing, i, j);
       const repPenalty = computeRepetitionPenalty(fromVariants[i]!, toVariants[j]!);
       const extPenalty = computeExtensionPenalty(fromVariants[i]!, toVariants[j]!);
-      d.totalDistance += repPenalty + extPenalty;
+      let rootLeadPenalty = 0;
+      if (includeRootLeading) {
+        rootLeadPenalty = computeRootLeadingDistance(fromVariants[i]!, toVariants[j]!) * ROOT_LEADING_WEIGHT;
+      }
+      d.totalDistance += repPenalty + extPenalty + rootLeadPenalty;
       row.push(d);
     }
     result.push(row);

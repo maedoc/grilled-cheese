@@ -2,6 +2,7 @@ import {
   generateMatrix,
   type VoiceLeadingMatrix,
   type VoiceLeadingPath,
+  type GenerateMatrixOptions,
 } from '../lib/index.js';
 
 export class Controller {
@@ -35,7 +36,10 @@ export class Controller {
         return;
       }
 
-      this.matrix = generateMatrix(chords, tonic, mode as 'major' | 'minor');
+    const matrixOptions: GenerateMatrixOptions = {
+        includeRootLeading: true,
+      };
+      this.matrix = generateMatrix(chords, tonic, mode as 'major' | 'minor', matrixOptions);
       this.paths = this.matrix.paths;
       this.activePathIndex = 0;
       this.onPathsUpdate?.(this.matrix, this.paths, this.activePathIndex);

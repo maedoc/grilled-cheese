@@ -1,13 +1,15 @@
-import type { ParsedChord, Key, HarmonicFunction } from '../core/types.js';
+import type { ParsedChord, Key, HarmonicFunction, ChordQuality } from '../core/types.js';
 import {
   MAJOR_KEY_FUNCTIONS,
   MINOR_KEY_FUNCTIONS,
+  MAJOR_KEY_SEVENTH_QUALITIES,
+  MINOR_KEY_SEVENTH_QUALITIES,
 } from '../core/constants.js';
 import { getRootPitchClass } from '../chord/builder.js';
 import { getDegreeInKey } from './key.js';
 import { detectSecondaryDominant } from './secondary.js';
 
-function isMinorishQuality(quality: string): boolean {
+function isMinorishQuality(quality: ChordQuality): boolean {
   return quality === 'minor' || quality === 'minor7' || quality === 'minor6'
     || quality === 'minorMajor7' || quality === 'halfDiminished' || quality === 'diminished'
     || quality === 'diminished7';
@@ -42,11 +44,25 @@ export function getHarmonicFunction(
   return 'dominant';
 }
 
+function getDiatonicQualityAtDegree(targetDegree: number, key: Key): ChordQuality {
+  const qualMap = key.mode === 'major'
+    ? MAJOR_KEY_SEVENTH_QUALITIES
+    : MINOR_KEY_SEVENTH_QUALITIES;
+  return qualMap[targetDegree] ?? 'major7';
+}
+
 export function resolvesToMajor(
-  _chord: ParsedChord,
+  chord: ParsedChord,
   nextChord: ParsedChord | null,
-  _key: Key,
+  key: Key,
 ): boolean {
+  const secInfo = detectSecondaryDominant(chord, key);
+  
+  if (secInfo.isSecondary && secInfo.targetDegree !== null) {
+    const targetQuality = getDiatonicQualityAtDegree(secInfo.targetDegree, key);
+    return !isMinorishQuality(targetQuality);
+  }
+  
   if (!nextChord) return true;
   return !isMinorishQuality(nextChord.quality);
 }
